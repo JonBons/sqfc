@@ -7,7 +7,7 @@
   <info>https://github.com/JonBons/sqfc/blob/master/README.md</info>
   <download>https://github.com/JonBons/sqfc/releases/download/v0.0.0.2/sqfc.zip</download>
   <additionalFiles>
-     <file url="http://homepage.ntlworld.com/n.macmullen/projects/squint/bin/Application%20Files/squint_1_0_0_134/Mac.Arma.FileFormats.dll.deploy" filename="Mac.Arma.FileFormats.dll" />
-     <file url="http://homepage.ntlworld.com/n.macmullen/projects/squint/bin/Application%20Files/squint_1_0_0_134/mac.XML.dll.deploy" filename="Mac.XML.dll" />
+     <file url="http://homepage.ntlworld.com/n.macmullen/projects/squint/bin/Application%20Files/squint_1_0_0_134/Mac.Arma.FileFormats.dll.deploy">Mac.Arma.FileFormats.dll</file>
+     <file url="http://homepage.ntlworld.com/n.macmullen/projects/squint/bin/Application%20Files/squint_1_0_0_134/mac.XML.dll.deploy">Mac.XML.dll</file>
   </additionalFiles>
 </manifest>
