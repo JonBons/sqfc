@@ -24,6 +24,17 @@ namespace sqfc
     {
         public static XDocument Manifest = null;
 
+        static bool Exists(string Name) {
+			if (File.Exists(Path.GetFullPath(Name)))
+				return true;
+			foreach (string test in (Environment.GetEnvironmentVariable("PATH") ?? "").Split(';')) {
+				string path = test.Trim();
+				if (!String.IsNullOrEmpty(path) && File.Exists(path = Path.Combine(path, Name)))
+					return true;
+			}
+			return false;
+		}
+
         /// <summary>
         /// Checks for an update and shows the update dialog if there is an update available.
         /// </summary>
@@ -39,6 +50,16 @@ namespace sqfc
                 // download manifest
                 XDocument doc = XDocument.Load(Settings.Default.RemoteManifest);
                 Manifest = doc;
+
+                var additionalFiles = doc.Root.Element("additionalFiles").Descendants("file");
+
+                foreach (var file in additionalFiles)
+                {
+                    if (!Exists(file.Value))
+                    {
+                        return UpdateStatus.NewVersionAvailable;
+                    }
+                }
 
                 // if newer, display update dialog
                 Version newestVersion = new Version((string)doc.Root.Element("version"));

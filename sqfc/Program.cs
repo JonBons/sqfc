@@ -100,7 +100,9 @@ namespace sqfc {
 		{
 			int ii = DoArgs(ref Args);
 
-            if (Updating)
+            var requiredDepsExist = Exists("Mac.Arma.FileFormats.dll") && Exists("Mac.XML.dll");
+
+            if (Updating || !requiredDepsExist)
 		    {
 		        if (Updater.CheckForUpdate() == UpdateStatus.NewVersionAvailable)
 		        {
