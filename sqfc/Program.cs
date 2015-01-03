@@ -140,7 +140,7 @@ namespace sqfc {
                 var lineNumber = mainString.Take(current.Position).Count(c => c == '\n') + 1;
                 //var lineText = GetLine(mainString, lineNumber);
 
-                var column = (current.Position - (current.Position - current.Length)) + 2;
+                var column = 0; //(current.Position - (current.Position - current.Length)) + 2;
 
                 string ErrMsg = String.Format("{0}:{1}:{2}: {3}", ChunkName, lineNumber, column, current.Text);
 
