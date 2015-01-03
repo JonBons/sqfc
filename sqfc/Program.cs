@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 
 using Microsoft.Win32;
 using Mac.Arma.FileFormats;
+using System.Text.RegularExpressions;
 
 namespace sqfc {
 	unsafe class Program {
@@ -69,7 +70,7 @@ namespace sqfc {
         static string GetLine(string text, int lineNo)
         {
             string[] lines = text.Replace("\r", "").Split('\n');
-            return lines.Length >= lineNo ? lines[lineNo - 1] : null;
+            return lines.Length >= lineNo ? (lines[lineNo - 1]) + '\n' : null;
         }
 
 		static bool Exists(string Name) {
@@ -110,11 +111,21 @@ namespace sqfc {
 			}
 		}
 
-		static void Run(string In, string Out, string ChunkName) {
+		static void Run(string In, string Out, string ChunkName) 
+        {
+            PreProcessor preProcessor = new PreProcessor("", new DefaultFileFetcher());
+            preProcessor.PreProcessTopLevelFromString(In, "**scratch**");
 
-            BISTextTokeniser tokeniser = BISTextTokeniser.FromString(In, true, true);
-            SqfParser sqfParser = new SqfParser(tokeniser, null, GrammarType.Sqf);
-            sqfParser.Parse();
+            string mainString = preProcessor.folded.Text(true);
+
+            BISTextTokeniser tokeniser = BISTextTokeniser.FromString(mainString, true, true);
+            SqfParser sqfParser = new SqfParser(tokeniser, preProcessor.Errors, GrammarType.Sqf);
+            var tree = sqfParser.Parse();
+
+            var globalVars = sqfParser.GlobalVars();
+            //this.Folded.FoldTopLevel();
+
+            sqfParser.CheckErrors(globalVars);
 
             foreach (ParseError current in sqfParser.errors)
             {
@@ -126,11 +137,10 @@ namespace sqfc {
                     fixAvailable = "Y";
                 }
 
-                var lineNumber = In.Take(current.Position).Count(c => c == '\n') + 1;
-                //var lineText = GetLine(In, lineNumber);
+                var lineNumber = mainString.Take(current.Position).Count(c => c == '\n') + 1;
+                //var lineText = GetLine(mainString, lineNumber);
 
-                //var column = current.Length; //TODO: make this actually represent column
-                var column = 0;
+                var column = (current.Position - (current.Position - current.Length)) + 2;
 
                 string ErrMsg = String.Format("{0}:{1}:{2}: {3}", ChunkName, lineNumber, column, current.Text);
 
@@ -143,8 +153,6 @@ namespace sqfc {
                     Console.WriteLine("W:{0}", ErrMsg);
                 }
 
-                Environment.Exit(2);
-
                 //Console.WriteLine("Sev: " + severity + ", Fix: " + fixAvailable + ", Text:" + current.Text + ", Len:" + current.Length + ", Line #:" + lineNumber);
 
                 //if (current.Action != ErrorActionType.None)
@@ -153,38 +161,7 @@ namespace sqfc {
                 //}
             }
 
-			/*IntPtr L = Lua.NewState();
-			Lua.OpenLibs(L);
-			Lua.AtPanic(L, (LL) => {
-				Console.ForegroundColor = ConsoleColor.White;
-				Console.WriteLine("\n\nPANIC!");
-				Console.ResetColor();
-				Console.WriteLine(Lua.ToString(LL, -1));
-				Console.ReadKey();
-				Environment.Exit(0);
-				return 0;
-			});
-
-			Lua.RegisterCFunction(L, "_G", "dumpBytecode", (LL) => {
-				if (Dumping) {
-					int Len = 0;
-					char* Bytecode = (char*)Lua.ToLString(L, -1, new IntPtr(&Len)).ToPointer();
-					string BytecodeStr = new string((sbyte*)Bytecode, 0, Len, Encoding.ASCII);
-					File.WriteAllText(Out, BytecodeStr);
-				}
-				return 0;
-			});
-
-			Lua.SetTop(L, 0);
-			Lua.GetGlobal(L, "dumpBytecode");
-			Lua.GetGlobal(L, "string");
-			Lua.PushString(L, "dump"); // Yes, it uses string.dump, and no, i'm not gonna implement proper dump function (lazy)
-			Lua.GetTable(L, -2);
-			ErrorCheck(L, Lua.LoadBuffer(L, In, ChunkName));
-			ErrorCheck(L, Lua.PCall(L, 1, 1, 0));
-			Lua.Replace(L, -2);
-			ErrorCheck(L, Lua.PCall(L, 1, 0, 0));
-			Lua.Close(L);*/
+            Environment.Exit(2);
 		}
 	}
 }
