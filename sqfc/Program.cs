@@ -16,6 +16,7 @@ namespace sqfc {
 		static bool Dumping = true;
 		static bool Stripping = false;
 		static bool Testing = false;
+        static bool Updating = false;
 		static string DefaultOut = "sqfc.out";
 		static string Out = "";
 
@@ -39,6 +40,8 @@ namespace sqfc {
 				else if (Argv[i] == ("-t"))                    /* test */ {
 					Testing = true;
 					Dumping = false;
+               } else if (Argv[i] == ("-u") || Argv[i] == ("-update"))                    /* update */ {
+					Updating = true;
 				} else if (Argv[i] == ("-v"))                    /* show version */ {
 					Console.WriteLine("{0}  {1}\n", "SQFC X.Y", "<insert copyright here>");
 					if (Argv.Length == 2)
@@ -63,6 +66,7 @@ namespace sqfc {
 				+ "  -p       parse only\n"
 				+ "  -s       strip debug information [disabled]\n"
 				+ "  -t       test code integrity [disabled]\n"
+                + "  -u       update and download dependencies\n"
 				+ "  -v       show version information\n");
 			Environment.Exit(1);
 		}
@@ -92,8 +96,20 @@ namespace sqfc {
 			return Console.In.ReadToEnd();
 		}
 
-		static void Main(string[] Args) {
+		static void Main(string[] Args)
+		{
 			int ii = DoArgs(ref Args);
+
+            if (Updating)
+		    {
+		        if (Updater.CheckForUpdate() == UpdateStatus.NewVersionAvailable)
+		        {
+                    Console.WriteLine("Updating sqfc...");
+                    Updater.LaunchUpdater(Updater.Manifest);
+                    Environment.Exit(1);
+		        }
+		    }
+
 			int Argc = Args.Length;
 			if (Argc <= 0)
 				Usage("no input files given", "");
