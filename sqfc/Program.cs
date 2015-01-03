@@ -127,6 +127,8 @@ namespace sqfc {
 
             sqfParser.CheckErrors(globalVars);
 
+            //File.WriteAllText(DefaultOut, "");
+
             foreach (ParseError current in sqfParser.errors)
             {
                 var severity = current.Severity.ToString().Substring(0, 1);
@@ -142,16 +144,20 @@ namespace sqfc {
 
                 var column = 0; //(current.Position - (current.Position - current.Length)) + 2;
 
-                string ErrMsg = String.Format("{0}:{1}:{2}: {3}", ChunkName, lineNumber, column, current.Text);
-
+                string ErrMsg = "";
                 if (current.Severity < ErrorSeverity.Warning)
                 {
-                    Console.WriteLine("E:{0}", ErrMsg);
+                    ErrMsg = String.Format("E:{0}:{1}:{2}: {3}", ChunkName, lineNumber, column, current.Text);
                 }
                 else
                 {
-                    Console.WriteLine("W:{0}", ErrMsg);
+                    if (current.Text.Contains("Unknown variable ")) { continue; }
+
+                    ErrMsg = String.Format("W:{0}:{1}:{2}: {3}", ChunkName, lineNumber, column, current.Text);
                 }
+
+                Console.WriteLine(ErrMsg);
+                //File.AppendAllText(DefaultOut, ErrMsg + "\n");
 
                 //Console.WriteLine("Sev: " + severity + ", Fix: " + fixAvailable + ", Text:" + current.Text + ", Len:" + current.Length + ", Line #:" + lineNumber);
 
