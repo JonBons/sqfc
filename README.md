@@ -1,7 +1,7 @@
 sqfc
 =====
 
-SQF Parser based on Squint for tools like SublimeLinter.
+SQF Parser using Squint for tools like SublimeLinter.
 
 
 Code forked from [gluac](https://github.com/cartman300/gluac) and modified for Squint's SQF Parser.
