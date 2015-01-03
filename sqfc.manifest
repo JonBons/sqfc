@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!-- Update this file when you have a new version. 
+     Upload both this file and the below zip file. -->
+<manifest>
+  <date>2014-01-03T12:21:52</date>
+  <version>0.2</version>
+  <info>https://github.com/JonBons/sqfc/blob/master/README.md</info>
+  <download>https://github.com/JonBons/sqfc/releases/download/v0.2/sqfc.zip</download>
+</manifest>
