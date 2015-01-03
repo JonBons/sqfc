@@ -3,7 +3,7 @@
      Upload both this file and the below zip file. -->
 <manifest>
   <date>2014-01-03T12:21:52</date>
-  <version>0.2</version>
+  <version>0.0.0.2</version>
   <info>https://github.com/JonBons/sqfc/blob/master/README.md</info>
-  <download>https://github.com/JonBons/sqfc/releases/download/v0.2/sqfc.zip</download>
+  <download>https://github.com/JonBons/sqfc/releases/download/v0.0.0.2/sqfc.zip</download>
 </manifest>
