@@ -10,17 +10,6 @@ using Mac.Arma.FileFormats;
 
 namespace sqfc {
 	unsafe class Program {
-		static void ErrorCheck(IntPtr L, int I) {
-			if (I != 0) {
-				/*string ErrMsg = Lua.ToString(L, -1);
-				if (ErrMsg.Contains("[string \""))
-					ErrMsg = ErrMsg.Replace("[string \"", "").Replace("\"]:", ":");*/
-
-				//Console.WriteLine("error: {0}", ErrMsg);
-				//Lua.Pop(L);
-				Environment.Exit(2);
-			}
-		}
 
 		static bool Listing = false;
 		static bool Dumping = true;
@@ -134,8 +123,16 @@ namespace sqfc {
                 var lineNumber = In.Take(current.Position).Count(c => c == '\n') + 1;
 
 
-                string ErrMsg = String.Format("{0}:{1}: {2}", ChunkName, lineNumber, current.Text);
-                Console.WriteLine("error: {0}", ErrMsg);
+                string ErrMsg = String.Format("{0}:{1}:{2}: {3}", ChunkName, lineNumber, current.Length, current.Text);
+
+                if (current.Severity < ErrorSeverity.Warning)
+                {
+                    Console.WriteLine("error: {0}", ErrMsg);
+                }
+                else
+                {
+                    Console.WriteLine("warning: {0}", ErrMsg);
+                }
 
                 Environment.Exit(2);
 
