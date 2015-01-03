@@ -4,7 +4,7 @@
 <manifest>
   <date>2014-01-03T12:21:52</date>
   <version>0.0.0.3</version>
-  <info>https://github.com/JonBons/sqfc/blob/master/README.md</info>
+  <info>https://github.com/JonBons/sqfc</info>
   <download>https://github.com/JonBons/sqfc/releases/download/v0.0.0.3/sqfc_0_0_0_3.zip</download>
   <additionalFiles>
      <file url="http://homepage.ntlworld.com/n.macmullen/projects/squint/bin/Application%20Files/squint_1_0_0_134/Mac.Arma.FileFormats.dll.deploy">Mac.Arma.FileFormats.dll</file>
