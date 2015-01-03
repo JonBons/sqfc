@@ -66,6 +66,12 @@ namespace sqfc {
 			Environment.Exit(1);
 		}
 
+        static string GetLine(string text, int lineNo)
+        {
+            string[] lines = text.Replace("\r", "").Split('\n');
+            return lines.Length >= lineNo ? lines[lineNo - 1] : null;
+        }
+
 		static bool Exists(string Name) {
 			if (File.Exists(Path.GetFullPath(Name)))
 				return true;
@@ -121,17 +127,20 @@ namespace sqfc {
                 }
 
                 var lineNumber = In.Take(current.Position).Count(c => c == '\n') + 1;
+                //var lineText = GetLine(In, lineNumber);
 
+                //var column = current.Length; //TODO: make this actually represent column
+                var column = 0;
 
-                string ErrMsg = String.Format("{0}:{1}:{2}: {3}", ChunkName, lineNumber, current.Length, current.Text);
+                string ErrMsg = String.Format("{0}:{1}:{2}: {3}", ChunkName, lineNumber, column, current.Text);
 
                 if (current.Severity < ErrorSeverity.Warning)
                 {
-                    Console.WriteLine("error: {0}", ErrMsg);
+                    Console.WriteLine("E:{0}", ErrMsg);
                 }
                 else
                 {
-                    Console.WriteLine("warning: {0}", ErrMsg);
+                    Console.WriteLine("W:{0}", ErrMsg);
                 }
 
                 Environment.Exit(2);
